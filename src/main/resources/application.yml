@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql:///springboot
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    cache: false
+mybatis:
+  mapper-locations: classpath:cn/itsource/springboot/mapper/*.xml
+  type-aliases-package: cn.itsource.springboot.domain
+logging:
+  level:
+    cn:
+      itsource:
+        springboot:debug
+server:
+  port: 8080

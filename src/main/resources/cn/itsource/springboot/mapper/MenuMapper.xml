@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.springboot.mapper.MenuMapper">
+
+    <resultMap id="resultMenu" type="Menu">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="icon" property="icon"/>
+        <association property="parent" javaType="Menu">
+            <id column="pid" property="id"/>
+            <result column="pname" property="name"/>
+            <result column="purl" property="url"/>
+            <result column="picon" property="icon"/>
+        </association>
+    </resultMap>
+    
+    <select id="loadMenuByLoginUserId" resultMap="resultMenu">
+        SELECT DISTINCT m.*,parent.id AS pid,parent.name AS pname,parent.url purl,parent.icon picon
+        FROM employee e JOIN employee_role er ON e.id=er.employee_id
+        JOIN role r ON er.role_id=r.id
+        JOIN role_permission rp ON r.id=rp.role_id
+        JOIN permission p ON  rp.permission_id=p.id
+        JOIN menu m ON p.menu_id = m.id
+        LEFT JOIN menu parent ON m.parent_id=parent.id
+        WHERE e.id=#{empid}
+    </select>
+    
+</mapper>

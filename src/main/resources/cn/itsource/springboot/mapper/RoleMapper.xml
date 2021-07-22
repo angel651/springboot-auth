@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itsource.springboot.mapper.RoleMapper">
+    <select id="loadAllByQuery" resultType="Role">
+        SELECT * FROM role
+        <where>
+            <if test="roleName!=null and roleName!=''">
+                AND name LIKE CONCAT("%",#{roleName},"%")
+            </if>
+        </where>
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO role(name, sn) VALUES (#{name},#{sn})
+    </insert>
+
+    <update id="update">
+        UPDATE role SET name=#{name},sn=#{sn} WHERE id=#{id}
+    </update>
+
+   <!-- 删除角色和权限中间表-->
+    <delete id="removeRolePermissionByRoleId">
+        DELETE FROM role_permission WHERE role_id=#{roleId}
+    </delete>
+
+    <delete id="remove">
+        DELETE FROM role WHERE id=#{roleId}
+    </delete>
+
+
+    <delete id="removePermissionByRoleid">
+        DELETE FROM role_permission WHERE role_id=#{roleId}
+    </delete>
+
+    <insert id="saveRolePermission">
+        INSERT INTO role_permission(role_id, permission_id)
+        VALUES
+        <foreach collection="ids" item="permissionId" separator=",">
+            (${roleId},#{permissionId})
+        </foreach>
+    </insert>
+</mapper>
